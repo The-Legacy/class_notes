@@ -10,8 +10,10 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-change-this'
 
-# Database setup
-DATABASE = 'class_notes.db'
+
+# Database setup: always use the directory where the executable/script is located
+APP_ROOT = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
+DATABASE = os.path.join(APP_ROOT, 'class_notes.db')
 
 def init_db():
     """Initialize the database with required tables"""

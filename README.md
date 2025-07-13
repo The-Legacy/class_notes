@@ -19,6 +19,7 @@ A simple Flask web application for managing class notes, with persistent storage
 
 ### Download and Run
 
+
 **Recommended:**
 - Download a pre-built **Class Notes** executable for your platform from the [GitHub Releases](https://github.com/The-Legacy/class_notes/releases) page (if available):
     - Windows: `Class Notes.exe`
@@ -26,7 +27,8 @@ A simple Flask web application for managing class notes, with persistent storage
     - Linux: `Class Notes`
 - Place the executable, `class_notes.db`, `templates/`, and `static/` folders together in the same folder.
 - Double-click the **Class Notes** app to start it.
-- Your browser will open to [http://localhost:5000](http://localhost:5000) automatically, or you can open it manually.
+- Your default browser will open to [http://localhost:5000](http://localhost:5000) automatically.
+- When you close the browser tab or stop the server, the app will exit.
 - Use the app! All your data is saved in `class_notes.db`.
 
 **If no pre-built executable is available:**
