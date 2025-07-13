@@ -13,61 +13,63 @@ A simple Flask web application for managing class notes, with persistent storage
 
 ---
 
-## Quick Start (Executable)
 
-### 1. Download or Build the Executable
-- Download the executable from the `dist/` folder (if provided)
-- **OR** build it yourself (see below)
 
-### 2. Place Files Together
-- Ensure the executable and `class_notes.db` are in the same folder
-- The folders `templates/` and `static/` must also be present in the same directory as the executable
+## One-Click App for All Platforms
 
-### 3. Run the App
-- Double-click the executable **or** run from terminal:
-  ```bash
-  ./app  # or app.exe on Windows
-  ```
-- The app will start a local server at [http://localhost:5000](http://localhost:5000)
+### Download and Run
 
-### 4. Using the App
-- Open your browser and go to [http://localhost:5000](http://localhost:5000)
-- All changes are saved in `class_notes.db` in the same folder
-- **Back up this file to preserve your notes!**
+**Recommended:**
+- Download a pre-built **Class Notes** executable for your platform from the [GitHub Releases](https://github.com/The-Legacy/class_notes/releases) page (if available):
+    - Windows: `Class Notes.exe`
+    - Mac: `Class Notes`
+    - Linux: `Class Notes`
+- Place the executable, `class_notes.db`, `templates/`, and `static/` folders together in the same folder.
+- Double-click the **Class Notes** app to start it.
+- Your browser will open to [http://localhost:5000](http://localhost:5000) automatically, or you can open it manually.
+- Use the app! All your data is saved in `class_notes.db`.
+
+**If no pre-built executable is available:**
+- You must build the executable yourself (see below).
+
+**Note:** For security reasons, scripts cannot run automatically when you download code from GitHub. You must manually run the build script after downloading.
 
 ---
 
-## Building the Executable Yourself
+## Building the Executable Yourself (Advanced)
 
 1. Install Python 3.8+ and pip
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Build with PyInstaller:
+3. Run the build script for your platform:
    ```bash
-   pyinstaller --onefile --add-data "class_notes.db:." --add-data "templates:templates" --add-data "static:static" app.py
+   ./build.sh
    ```
-   - On Windows, use `;` instead of `:` in `--add-data`.
-   - The executable will be in the `dist/` folder.
+   - On Windows, use the PyInstaller command in the script as a reference and run it in CMD/PowerShell.
+4. The executable will be in the `dist/` folder, named **Class Notes** (or `Class Notes.exe` on Windows).
 
 ---
 
-## Development Mode
+---
 
-You can also run the app directly with Python:
 
-```bash
-python3 app.py
-```
+## Data Storage
+- All your data is saved in the `class_notes.db` file in the app folder.
+- To back up your notes, just copy this file.
+- If `class_notes.db` does not exist, it will be created automatically on first run.
 
 ---
 
-## Notes
-- The app uses a local SQLite database (`class_notes.db`).
-- All changes are saved automatically.
-- To move your data, just copy the `class_notes.db` file.
-- If `class_notes.db` does not exist, it will be created on first run.
+---
+
+
+## Development
+- To make changes, edit the Python or HTML files and rebuild the executable.
+- For development, you can still run the app with Python as before.
+
+---
 
 ---
 
