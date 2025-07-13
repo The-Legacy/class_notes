@@ -64,7 +64,10 @@ def init_db():
         INSERT OR IGNORE INTO settings (key, value) VALUES ('school_name', 'U of M')
     ''')
     cursor.execute('''
-        INSERT OR IGNORE INTO settings (key, value) VALUES ('school_color', '#FFCB05')
+        INSERT OR IGNORE INTO settings (key, value) VALUES ('school_primary_color', '#7C2328')
+    ''')
+    cursor.execute('''
+        INSERT OR IGNORE INTO settings (key, value) VALUES ('school_secondary_color', '#00274C')
     ''')
     
     conn.commit()
@@ -128,7 +131,8 @@ def index():
     
     # Get school settings
     school_name = get_setting('school_name', 'U of M')
-    school_color = get_setting('school_color', '#FFCB05')
+    school_primary_color = get_setting('school_primary_color', '#7C2328')
+    school_secondary_color = get_setting('school_secondary_color', '#00274C')
     
     # Calculate notes per day
     notes_per_day = calculate_notes_per_day()
@@ -137,7 +141,8 @@ def index():
     return render_template('index.html', 
                          class_stats=class_stats,
                          school_name=school_name,
-                         school_color=school_color,
+                         school_primary_color=school_primary_color,
+                         school_secondary_color=school_secondary_color,
                          notes_per_day=notes_per_day)
 
 @app.route('/add_class', methods=['GET', 'POST'])
@@ -323,33 +328,52 @@ def settings():
     """App settings page"""
     if request.method == 'POST':
         school_name = request.form['school_name']
-        school_color = request.form['school_color']
+        school_primary_color = request.form['school_primary_color']
+        school_secondary_color = request.form['school_secondary_color']
         
         if school_name:
             set_setting('school_name', school_name)
-            set_setting('school_color', school_color)
+            set_setting('school_primary_color', school_primary_color)
+            set_setting('school_secondary_color', school_secondary_color)
             flash('Settings updated successfully!', 'success')
             return redirect(url_for('index'))
         else:
             flash('School name is required!', 'error')
     
-    # Get current settings and stats
+    # Color options for swatches/buttons
+    color_options = [
+        {"name": "Maroon", "value": "#7C2328", "text": "#fff"},
+        {"name": "Navy", "value": "#00274C", "text": "#fff"},
+        {"name": "Blue", "value": "#007bff", "text": "#fff"},
+        {"name": "Maize", "value": "#FFCB05", "text": "#222"},
+        {"name": "Green", "value": "#228B22", "text": "#fff"},
+        {"name": "Dark Green", "value": "#006400", "text": "#fff"},
+        {"name": "White", "value": "#fff", "text": "#222"},
+        {"name": "Orange", "value": "#FF8200", "text": "#222"},
+        {"name": "Purple", "value": "#6F42C1", "text": "#fff"},
+        {"name": "Black", "value": "#000", "text": "#fff"},
+        {"name": "Yellow", "value": "#FFD600", "text": "#222"},
+    ]
+
     school_name = get_setting('school_name', 'U of M')
-    school_color = get_setting('school_color', '#FFCB05')
-    
+    school_primary_color = get_setting('school_primary_color', '#7C2328')
+    school_secondary_color = get_setting('school_secondary_color', '#00274C')
+
     conn = get_db_connection()
     total_classes = conn.execute('SELECT COUNT(*) as count FROM classes WHERE archived = 0').fetchone()['count']
     total_notes = conn.execute('SELECT COUNT(*) as count FROM notes n JOIN classes c ON n.class_id = c.id WHERE c.archived = 0').fetchone()['count']
     conn.close()
-    
+
     notes_per_day = calculate_notes_per_day()
-    
-    return render_template('settings.html', 
-                         school_name=school_name, 
-                         school_color=school_color,
+
+    return render_template('settings.html',
+                         school_name=school_name,
+                         school_primary_color=school_primary_color,
+                         school_secondary_color=school_secondary_color,
                          total_classes=total_classes,
                          total_notes=total_notes,
-                         notes_per_day=notes_per_day)
+                         notes_per_day=notes_per_day,
+                         color_options=color_options)
 
 @app.route('/class/<int:class_id>/delete', methods=['POST'])
 def delete_class(class_id):

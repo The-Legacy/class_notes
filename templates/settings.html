@@ -24,28 +24,43 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="school_color" class="form-label">School Color</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="color" class="form-control form-control-color" 
-                                       id="school_color" name="school_color" value="{{ school_color }}" 
-                                       title="Choose school color">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="color-presets">
-                                    <span class="color-preset" data-color="#FFCB05" style="background-color: #FFCB05;" title="Michigan Maize"></span>
-                                    <span class="color-preset" data-color="#00274C" style="background-color: #00274C;" title="Michigan Blue"></span>
-                                    <span class="color-preset" data-color="#CC0000" style="background-color: #CC0000;" title="Ohio State"></span>
-                                    <span class="color-preset" data-color="#4B2E84" style="background-color: #4B2E84;" title="Northwestern"></span>
-                                    <span class="color-preset" data-color="#0F1B3C" style="background-color: #0F1B3C;" title="Penn State"></span>
-                                    <span class="color-preset" data-color="#9D2235" style="background-color: #9D2235;" title="Indiana"></span>
-                                    <span class="color-preset" data-color="#FF6600" style="background-color: #FF6600;" title="Illinois"></span>
-                                    <span class="color-preset" data-color="#660000" style="background-color: #660000;" title="Minnesota"></span>
-                                </div>
-                            </div>
+                        <label class="form-label">Primary School Color</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for color in color_options %}
+                            <input type="radio" class="btn-check" name="school_primary_color" id="primary-{{ color.name }}" value="{{ color.value }}" autocomplete="off" {% if school_primary_color == color.value %}checked{% endif %}>
+                            <label class="btn btn-outline-secondary color-swatch-label" for="primary-{{ color.name }}" style="background: {{ color.value }}; color: {{ color.text }}; min-width: 60px;">
+                                {{ color.name }}
+                            </label>
+                            {% endfor %}
                         </div>
-                        <small class="form-text text-muted">Choose your school's official color</small>
+                        <small class="form-text text-muted">Choose your school's primary color</small>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Secondary School Color</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for color in color_options %}
+                            <input type="radio" class="btn-check" name="school_secondary_color" id="secondary-{{ color.name }}" value="{{ color.value }}" autocomplete="off" {% if school_secondary_color == color.value %}checked{% endif %}>
+                            <label class="btn btn-outline-secondary color-swatch-label" for="secondary-{{ color.name }}" style="background: {{ color.value }}; color: {{ color.text }}; min-width: 60px;">
+                                {{ color.name }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <small class="form-text text-muted">Choose your school's secondary color</small>
+                    </div>
+<style>
+.color-swatch-label {
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+    transition: border 0.2s;
+}
+.btn-check:checked + .color-swatch-label {
+    border: 3px solid #333;
+    box-shadow: 0 0 0 2px #3333;
+}
+</style>
                     
                     <div class="mb-4">
                         <h5><i class="fas fa-info-circle"> </i> About</h5>
