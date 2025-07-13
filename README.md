@@ -76,4 +76,4 @@ A simple Flask web application for managing class notes, with persistent storage
 ---
 
 ## License
-MIT
+The-Legacy "Bicycle Fluid"
