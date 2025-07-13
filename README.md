@@ -20,16 +20,27 @@ A simple Flask web application for managing class notes, with persistent storage
 ### Download and Run
 
 
+
 **Recommended:**
-- Download a pre-built **Class Notes** executable for your platform from the [GitHub Releases](https://github.com/The-Legacy/class_notes/releases) page (if available):
-    - Windows: `Class Notes.exe`
-    - Mac: `Class Notes`
-    - Linux: `Class Notes`
-- Place the executable, `class_notes.db`, `templates/`, and `static/` folders together in the same folder.
-- Double-click the **Class Notes** app to start it.
-- Your default browser will open to [http://localhost:5000](http://localhost:5000) automatically.
-- When you close the browser tab or stop the server, the app will exit.
-- Use the app! All your data is saved in `class_notes.db`.
+
+1. Go to the [GitHub Releases](https://github.com/The-Legacy/class_notes/releases) page.
+2. Download the correct zip file for your operating system:
+    - **Windows:** `Class_Notes_Windows.zip`
+    - **Mac:** `Class_Notes_Mac.zip`
+    - **Linux:** `Class_Notes_Linux.zip`
+3. Unzip the downloaded file:
+    - **Windows:** Right-click the zip file and select "Extract All..."
+    - **Mac:** Double-click the zip file to extract it
+    - **Linux:** Use your file manager or run `unzip Class_Notes_Linux.zip` in the terminal
+4. Open the extracted folder. You should see:
+    - The executable (`Class Notes.exe` on Windows, `Class Notes` on Mac/Linux)
+    - `class_notes.db`, `templates/`, and `static/` folders
+5. **Run the app:**
+    - **Windows:** Double-click `Class Notes.exe` or open a terminal in the folder and run `./Class_Notes.exe`
+    - **Mac/Linux:** Open a terminal in the folder and run `./Class\ Notes` (use tab to autocomplete the name)
+6. Your default browser will open to [http://localhost:5000](http://localhost:5000) automatically.
+7. When you close the browser tab or stop the server, the app will exit.
+8. All your data is saved in `class_notes.db` in the same folder.
 
 **If no pre-built executable is available:**
 - You must build the executable yourself (see below).
