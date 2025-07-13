@@ -1,0 +1,527 @@
+/* Custom Brownish Buttons */
+.btn-brown {
+    background-color: var(--color-6);
+    border-color: var(--color-6);
+    color: #fff;
+}
+.btn-brown:hover, .btn-brown:focus {
+    background-color: #5a3d23;
+    border-color: #5a3d23;
+    color: #fff;
+}
+.btn-outline-brown {
+    background-color: transparent;
+    border-color: var(--color-6);
+    color: var(--color-6);
+}
+.btn-outline-brown:hover, .btn-outline-brown:focus {
+    background-color: var(--color-6);
+    color: #fff;
+}
+.btn-outline-brown-yellow {
+    background-color: transparent;
+    border-color: #7C5C3E;
+    color: #7C5C3E;
+}
+.btn-outline-brown-yellow:hover, .btn-outline-brown-yellow:focus {
+    background-color: #7C5C3E;
+    color: #fff;
+}
+.btn-outline-brown-red {
+    background-color: transparent;
+    border-color: #8B4A2F;
+    color: #8B4A2F;
+}
+.btn-outline-brown-red:hover, .btn-outline-brown-red:focus {
+    background-color: #8B4A2F;
+    color: #fff;
+}
+/* Neutral Light Theme Variables */
+
+:root {
+    --color-1: #BAA390; /* main accent */
+    --color-2: #F8F6F2; /* off-white background */
+    --color-3: #EEEBe5; /* card background */
+    --color-4: #2d2320; /* text */
+    --color-5: #D9BFAC; /* secondary accent */
+    --color-6: #7C5C3E; /* dark brown accent */
+
+    --bg-main: var(--color-2);
+    --bg-card: var(--color-3);
+    --bg-card-header: var(--color-5);
+    --text-main: var(--color-4);
+    --text-muted: #7a7a7a;
+    --border-main: var(--color-1);
+    --btn-main: var(--color-1);
+    --btn-main-hover: var(--color-6);
+    --btn-secondary: var(--color-5);
+    --btn-secondary-hover: var(--color-1);
+    --stat-card-bg: var(--color-1);
+    --stat-card-text: #fff;
+    --stat-card-accent: var(--color-6);
+}
+
+body {
+    background-color: var(--bg-main);
+    color: #2d2320;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Header (Navbar) */
+.navbar {
+    background-color: var(--bg-card-header) !important;
+    color: var(--text-main) !important;
+    border-bottom: 2px solid var(--border-main);
+}
+.navbar .navbar-brand, .navbar .nav-link, .navbar .navbar-toggler, .navbar .navbar-toggler-icon {
+    color: var(--text-main) !important;
+}
+.navbar .nav-link.active, .navbar .nav-link:focus, .navbar .nav-link:hover {
+    color: var(--color-1) !important;
+}
+
+/* Footer */
+footer.bg-light {
+    background-color: var(--bg-card-header) !important;
+    color: var(--text-main) !important;
+    border-top: 2px solid var(--border-main);
+}
+footer p {
+    color: var(--text-muted);
+}
+
+
+/* Cards */
+.card {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-main);
+    box-shadow: 0 2px 4px rgba(66, 74, 84, 0.05);
+}
+.card-header {
+    background-color: var(--bg-card-header);
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border-main);
+}
+.card-title {
+    color: var(--text-main);
+}
+
+/* Quick Stats Cards (use .stat-card class for these) */
+.stat-card {
+    background: linear-gradient(135deg, var(--stat-card-bg) 80%, var(--stat-card-accent) 100%);
+    color: #2d2320;
+    border: none;
+    box-shadow: 0 2px 8px rgba(124, 92, 62, 0.10);
+    border-radius: 1rem;
+    padding: 1.25rem 1rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s;
+    min-height: 180px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
+.stat-card .card-title, .stat-card .stat-label {
+    color: #2d2320;
+}
+.stat-card .stat-value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #2d2320;
+    text-shadow: 0 2px 8px rgba(66, 74, 84, 0.10);
+}
+.stat-card .stat-label {
+    font-size: 1rem;
+    opacity: 0.95;
+}
+.stat-card .icon {
+    color: var(--stat-card-accent);
+    font-size: 2rem;
+    margin-right: 0.5rem;
+}
+.stat-card.school-card {
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--btn-main);
+    border-color: var(--btn-main);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: var(--btn-main-hover);
+    border-color: var(--btn-main-hover);
+    color: #fff;
+}
+.btn-secondary {
+    background-color: var(--btn-secondary);
+    border-color: var(--btn-secondary);
+    color: var(--text-main);
+}
+.btn-secondary:hover {
+    background-color: var(--btn-secondary-hover);
+    border-color: var(--btn-secondary-hover);
+    color: var(--text-main);
+}
+.card-footer .d-flex,
+.card-body .d-flex {
+    align-items: stretch;
+}
+
+.card-footer .btn,
+.card-body .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Ensure button groups in forms have consistent width */
+.btn-group.w-100 form {
+    flex: 1;
+}
+
+.btn-group.w-100 form .btn {
+    width: 100%;
+}
+
+/* Make sure all action buttons in the same row have equal height */
+.d-flex .btn,
+.btn-group .btn {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Consistent padding for small buttons */
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+/* Additional Button Styling */
+.card-footer .btn-group {
+    width: 100%;
+}
+
+.card-footer .btn-group .btn {
+    flex: 1;
+}
+
+/* Delete button styling */
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Class specific styles */
+.class-card {
+    transition: all 0.3s ease;
+}
+
+.class-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.class-color-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Class card styling */
+.class-border {
+    border-left: 4px solid var(--class-color, #007bff) !important;
+}
+
+.note-card .class-border {
+    border-left: 3px solid var(--class-color, #007bff) !important;
+}
+
+/* Dynamic theming for class pages */
+.class-themed .btn-primary {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.class-themed .btn-outline-primary {
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.class-themed .btn-outline-primary:hover {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.class-themed .text-primary {
+    transition: color 0.2s ease;
+}
+
+.class-themed .border-primary {
+    transition: border-color 0.2s ease;
+}
+
+.class-themed .bg-primary {
+    transition: background-color 0.2s ease;
+}
+
+/* Complete theme override for class pages */
+.class-themed .navbar {
+    transition: background-color 0.3s ease;
+}
+
+.class-themed .navbar-brand {
+    transition: color 0.2s ease;
+}
+
+.class-themed .nav-link {
+    transition: color 0.2s ease;
+}
+
+.class-themed .nav-link:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.class-themed .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Quill editor theming */
+.class-themed .ql-toolbar {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.class-themed .ql-toolbar .ql-stroke {
+    stroke: currentColor;
+}
+
+.class-themed .ql-toolbar .ql-fill {
+    fill: currentColor;
+}
+
+.class-themed .ql-toolbar button:hover {
+    color: var(--class-color, #007bff);
+}
+
+.class-themed .ql-toolbar button.ql-active {
+    color: var(--class-color, #007bff);
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #495057;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Note specific styles */
+.note-card {
+    transition: all 0.2s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.note-preview {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-height: 4.2rem;
+    overflow: hidden;
+}
+
+.note-content {
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Rich text editor styles */
+.ql-toolbar {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-radius: 8px 8px 0 0;
+}
+
+.ql-container {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-radius: 0 0 8px 8px;
+}
+
+.ql-editor {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Color presets */
+.color-presets {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.color-preset {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+.color-preset:hover {
+    transform: scale(1.1);
+}
+
+.color-preset.active {
+    border-color: #007bff;
+    transform: scale(1.1);
+}
+
+/* Search styles */
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+/* Print styles */
+@media print {
+    .navbar, .btn, .card-footer, footer {
+        display: none !important;
+    }
+    
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .note-content {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+    
+    body {
+        background: white !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .color-presets {
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        border-radius: 6px !important;
+        margin-bottom: 2px;
+    }
+}
+
+/* Animation for card hover */
+.card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar for editor */
+.ql-editor::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ql-editor::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.ql-editor::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.ql-editor::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Archived badge styling */
+.badge.bg-secondary {
+    font-size: 0.7em;
+}
+
+/* Alert styling for archived page */
+.alert-info {
+    border-left: 4px solid #0dcaf0;
+}

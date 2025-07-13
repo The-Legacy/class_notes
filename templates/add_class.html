@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Add Class - Class Notes{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-plus"></i> Add New Class</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Class Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               placeholder="e.g., Introduction to Computer Science" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="code" class="form-label">Class Code *</label>
+                        <input type="text" class="form-control" id="code" name="code" 
+                               placeholder="e.g., EECS 183" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" 
+                                  placeholder="Brief description of the class (optional)"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="color" class="form-label">Class Color</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="color" class="form-control form-control-color" 
+                                       id="color" name="color" value="#007bff" title="Choose class color">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="color-presets">
+                                    <span class="color-preset" data-color="#007bff" style="background-color: #007bff;" title="Blue"></span>
+                                    <span class="color-preset" data-color="#28a745" style="background-color: #28a745;" title="Green"></span>
+                                    <span class="color-preset" data-color="#dc3545" style="background-color: #dc3545;" title="Red"></span>
+                                    <span class="color-preset" data-color="#ffc107" style="background-color: #ffc107;" title="Yellow"></span>
+                                    <span class="color-preset" data-color="#6f42c1" style="background-color: #6f42c1;" title="Purple"></span>
+                                    <span class="color-preset" data-color="#fd7e14" style="background-color: #fd7e14;" title="Orange"></span>
+                                    <span class="color-preset" data-color="#20c997" style="background-color: #20c997;" title="Teal"></span>
+                                    <span class="color-preset" data-color="#6c757d" style="background-color: #6c757d;" title="Gray"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">Choose a color to help identify this class</small>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"> </i> Add Class
+                        </button>
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"> </i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Color preset functionality
+    const colorInput = document.getElementById('color');
+    const colorPresets = document.querySelectorAll('.color-preset');
+    
+    colorPresets.forEach(preset => {
+        preset.addEventListener('click', function() {
+            const color = this.getAttribute('data-color');
+            colorInput.value = color;
+            
+            // Remove active class from all presets
+            colorPresets.forEach(p => p.classList.remove('active'));
+            // Add active class to clicked preset
+            this.classList.add('active');
+        });
+    });
+});
+</script>
+{% endblock %}

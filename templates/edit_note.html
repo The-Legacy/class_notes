@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Note - {{ note.class_name }}{% endblock %}
+
+{% block content %}
+<div class="row class-themed">
+    <div class="col-md-12">
+        <!-- Class Context -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="mb-1">Editing note in: {{ note.class_name }}</h5>
+                <p class="text-muted mb-0">{{ note.class_code }}</p>
+            </div>
+        </div>
+
+        <!-- Edit Note Form -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-edit"> </i> Edit Note</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="noteForm">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Note Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               value="{{ note.title }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Note Content *</label>
+                        <div class="d-flex align-items-center mb-2">
+                            <!-- Math Button (update id for popup compatibility) -->
+                            <button type="button" class="btn btn-secondary btn-sm me-2" id="math-btn" title="Insert Math">
+                                <i class="bi bi-function"></i> Math
+                            </button>
+                            <span class="form-text text-muted">Insert <code>$...$</code> or <code>$$...$$</code> for math</span>
+                        </div>
+                        <div id="editor" style="height: 400px;"></div>
+                        <textarea name="content" id="content" style="display: none;" required>{{ note.content }}</textarea>
+                        <!-- Example and live preview removed as requested -->
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"> </i> Update Note
+                        </button>
+                        <a href="{{ url_for('view_note', note_id=note.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"> </i> Cancel
+                        </a>
+                        <a href="{{ url_for('view_class', class_id=note.class_id) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"> </i> Back to Class
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quill editor
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                ['link', 'blockquote', 'code-block'],
+                [{ 'align': [] }],
+                ['clean']
+            ]
+        },
+        placeholder: 'Edit your notes here...'
+    });
+    window.quill = quill;
+
+    // Math button inserts $$math$$ at cursor
+    document.getElementById('math-btn').onclick = function() {
+        // Handled by math_popup.js modal, do nothing here
+    };
+
+
+    // Set initial content
+    const initialContent = document.getElementById('content').value;
+    if (initialContent) {
+        quill.root.innerHTML = initialContent;
+    }
+
+    // Handle form submission
+    const form = document.getElementById('noteForm');
+    const contentTextarea = document.getElementById('content');
+    
+    // Ensure content is always transferred before submission
+    form.addEventListener('submit', function(e) {
+        // Get the HTML content from Quill
+        if (saveButton) {
+            saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveButton.disabled = true;
+        }
+    });
+
+    // Also update content on any text change for safety
+    quill.on('text-change', function() {
+        const content = quill.root.innerHTML;
+        contentTextarea.value = content;
+    });
+
+    // Auto-save functionality (save to localStorage)
+    let autoSaveTimer;
+    quill.on('text-change', function() {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(function() {
+            const title = document.getElementById('title').value;
+            const content = quill.root.innerHTML;
+            localStorage.setItem('draft_edit_{{ note.id }}', JSON.stringify({
+                title: title,
+                content: content,
+                timestamp: new Date().toISOString()
+            }));
+        }, 2000);
+    });
+
+    // Clear draft when form is successfully submitted
+    form.addEventListener('submit', function() {
+        setTimeout(() => {
+            localStorage.removeItem('draft_edit_{{ note.id }}');
+        }, 1000);
+    });
+});
+</script>
+<script src="{{ url_for('static', filename='js/math_popup.js') }}"></script>
+
+{% endblock %}

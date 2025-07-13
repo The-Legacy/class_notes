@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Add Note - {{ cls.name }}{% endblock %}
+
+{% block content %}
+<div class="row class-themed">
+    <div class="col-md-12">
+        <!-- Class Context -->
+        <div class="card mb-4 class-border" data-class-color="{{ cls.color }}">
+            <div class="card-body">
+                <h5 class="mb-1">Adding note to: {{ cls.name }}</h5>
+                <p class="text-muted mb-0">{{ cls.code }}</p>
+            </div>
+        </div>
+
+        <!-- Add Note Form -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-plus"> </i> Add New Note</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="noteForm">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Note Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               placeholder="e.g., Lecture 1: Introduction to Algorithms" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Note Content *</label>
+                        <div class="d-flex align-items-center mb-2">
+                            <!-- Math Button (update id for popup compatibility) -->
+                            <button type="button" class="btn btn-secondary btn-sm me-2" id="math-btn" title="Insert Math">
+                                <i class="bi bi-function"></i> Math
+                            </button>
+                            <span class="form-text text-muted">Insert <code>$...$</code> or <code>$$...$$</code> for math</span>
+                        </div>
+                        <div id="editor" style="height: 400px;"></div>
+                        <textarea name="content" id="content" style="display: none;" required></textarea>
+                        <!-- Example and live preview removed as requested -->
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-brown" id="saveButton">
+                            <i class="fas fa-save"> </i> Save Note
+                        </button>
+                        <a href="{{ url_for('view_class', class_id=cls.id) }}" class="btn btn-brown-yellow">
+                            <i class="fas fa-times"> </i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fix: define form and contentTextarea at the top
+    const form = document.getElementById('noteForm');
+    const contentTextarea = document.getElementById('content');
+    // Initialize Quill editor
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                ['link', 'blockquote', 'code-block'],
+                [{ 'align': [] }],
+                ['clean']
+            ]
+        },
+        placeholder: 'Start taking your notes here...'
+    });
+    window.quill = quill;
+    // Ensure content is always transferred before submission
+    form.addEventListener('submit', function(e) {
+        // Get the HTML content from Quill
+        const content = quill.root.innerHTML;
+        contentTextarea.value = content;
+        
+        // Basic validation - check if there's actual text content
+        const textContent = quill.getText().trim();
+        if (textContent === '' || textContent.length < 2) {
+            e.preventDefault();
+            alert('Please enter some content for your note.');
+            return false;
+        }
+        // Additional safety check
+        if (!contentTextarea.value || contentTextarea.value.trim() === '') {
+            contentTextarea.value = content;
+        }
+        // Show loading state
+        const saveButton = document.getElementById('saveButton');
+        if (saveButton) {
+            saveButton.innerHTML = '<i class=\"fas fa-spinner fa-spin\"></i> Saving...';
+            saveButton.disabled = true;
+        }
+    });
+
+    // Also update content on any text change for safety
+    quill.on('text-change', function() {
+        const content = quill.root.innerHTML;
+        contentTextarea.value = content;
+    });
+
+    // Auto-save functionality (save to localStorage)
+    let autoSaveTimer;
+    quill.on('text-change', function() {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(function() {
+            const title = document.getElementById('title').value;
+            const content = quill.root.innerHTML;
+            if (title || content !== '<p><br></p>') {
+                localStorage.setItem('draft_note_{{ cls.id }}', JSON.stringify({
+                    title: title,
+                    content: content,
+                    timestamp: new Date().toISOString()
+                }));
+            }
+        }, 2000);
+    });
+
+    // Restore from auto-save
+    const draftKey = 'draft_note_{{ cls.id }}';
+    const draft = localStorage.getItem(draftKey);
+    if (draft) {
+        try {
+            const draftData = JSON.parse(draft);
+            const confirm = window.confirm('Found a draft from ' + new Date(draftData.timestamp).toLocaleString() + '. Would you like to restore it?');
+            if (confirm) {
+                document.getElementById('title').value = draftData.title;
+                quill.root.innerHTML = draftData.content;
+            }
+        } catch (e) {
+            console.log('Error restoring draft:', e);
+        }
+    }
+
+    // Clear draft when form is successfully submitted
+    form.addEventListener('submit', function() {
+        setTimeout(() => {
+            localStorage.removeItem(draftKey);
+        }, 1000);
+    });
+});
+</script>
+<!-- At the end, include the popup JS -->
+<script src="{{ url_for('static', filename='js/math_popup.js') }}"></script>
+
+{% endblock %}

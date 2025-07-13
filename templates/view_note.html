@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}{{ note.title }} - {{ note.class_name }}{% endblock %}
+
+{% block content %}
+<div class="row class-themed">
+    <div class="col-md-12">
+        <!-- Note Header -->
+        <div class="card mb-4 class-border" data-class-color="{{ note.class_color }}">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="mb-1">{{ note.title }}</h1>
+                        <p class="text-muted mb-2">
+                            <strong>{{ note.class_name }}</strong> ({{ note.class_code }})
+                        </p>
+                        <small class="text-muted">
+                            <i class="fas fa-calendar"> </i> Created {{ note.created_at[:16] }}
+                            {% if note.updated_at != note.created_at %}
+                                • <i class="fas fa-edit"> </i> Updated {{ note.updated_at[:16] }}
+                            {% endif %}
+                        </small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        {% if not note.class_archived %}
+                        <a href="{{ url_for('edit_note', note_id=note.id) }}" class="btn btn-brown">
+                            <i class="fas fa-edit"> </i> Edit Note
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('view_class', class_id=note.class_id) }}" class="btn btn-brown-yellow">
+                            <i class="fas fa-arrow-left"> </i> Back to Class
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Note Content -->
+        <div class="card">
+            <div class="card-body">
+                <div id="note-content" class="note-content">
+                    {{ note.content|safe }}
+                    <script>
+                    // Render math in note content
+                    document.addEventListener('DOMContentLoaded', function() {
+                        if (window.MathJax) {
+                            MathJax.typesetPromise([document.getElementById('note-content')]);
+                        }
+                    });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Note Actions -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5><i class="fas fa-tools"> </i> Actions</h5>
+                <div class="btn-group w-100" role="group">
+                    {% if not note.class_archived %}
+                    <a href="{{ url_for('edit_note', note_id=note.id) }}" class="btn btn-brown">
+                        <i class="fas fa-edit"> </i> Edit
+                    </a>
+                    {% endif %}
+                    <button class="btn btn-brown" onclick="printNote()">
+                        <i class="fas fa-print"> </i> Print
+                    </button>
+                    <button class="btn btn-brown" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"> </i> Copy
+                    </button>
+                    <form method="POST" action="{{ url_for('delete_note', note_id=note.id) }}" 
+                          style="display: inline;">
+                        <button type="submit" class="btn btn-brown"
+                                onclick="return confirmNoteDelete('{{ note.title }}')">
+                            <i class="fas fa-trash"> </i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print Styles -->
+<style media="print">
+    .navbar, .card-header, .btn, .card:last-child {
+        display: none !important;
+    }
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .note-content {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function printNote() {
+    window.print();
+}
+
+function copyToClipboard() {
+    const noteContent = document.getElementById('note-content');
+    const textContent = noteContent.innerText || noteContent.textContent;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textContent).then(function() {
+            showNotification('Note content copied to clipboard!', 'success');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+            showNotification('Failed to copy to clipboard', 'error');
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = textContent;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showNotification('Note content copied to clipboard!', 'success');
+        } catch (err) {
+            console.error('Fallback: Could not copy text: ', err);
+            showNotification('Failed to copy to clipboard', 'error');
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+function showNotification(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.top = '20px';
+    alertDiv.style.right = '20px';
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

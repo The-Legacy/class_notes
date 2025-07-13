@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Class Notes{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-cog"> </i> App Settings</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-4">
+                        <h5><i class="fas fa-university"> </i> School Information</h5>
+                        <hr>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="school_name" class="form-label">School Name *</label>
+                        <input type="text" class="form-control" id="school_name" name="school_name" 
+                               value="{{ school_name }}" placeholder="e.g., University of Michigan" required>
+                        <small class="form-text text-muted">This will appear in your dashboard stats</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="school_color" class="form-label">School Color</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="color" class="form-control form-control-color" 
+                                       id="school_color" name="school_color" value="{{ school_color }}" 
+                                       title="Choose school color">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="color-presets">
+                                    <span class="color-preset" data-color="#FFCB05" style="background-color: #FFCB05;" title="Michigan Maize"></span>
+                                    <span class="color-preset" data-color="#00274C" style="background-color: #00274C;" title="Michigan Blue"></span>
+                                    <span class="color-preset" data-color="#CC0000" style="background-color: #CC0000;" title="Ohio State"></span>
+                                    <span class="color-preset" data-color="#4B2E84" style="background-color: #4B2E84;" title="Northwestern"></span>
+                                    <span class="color-preset" data-color="#0F1B3C" style="background-color: #0F1B3C;" title="Penn State"></span>
+                                    <span class="color-preset" data-color="#9D2235" style="background-color: #9D2235;" title="Indiana"></span>
+                                    <span class="color-preset" data-color="#FF6600" style="background-color: #FF6600;" title="Illinois"></span>
+                                    <span class="color-preset" data-color="#660000" style="background-color: #660000;" title="Minnesota"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">Choose your school's official color</small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5><i class="fas fa-info-circle"> </i> About</h5>
+                        <hr>
+                        <div class="alert alert-info">
+                            <h6>Current Statistics:</h6>
+                            <ul class="mb-0">
+                                <li>Total Classes: <strong>{{ total_classes or 0 }}</strong></li>
+                                <li>Total Notes: <strong>{{ total_notes or 0 }}</strong></li>
+                                <li>Notes per Day: <strong>{{ notes_per_day or 0 }}</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"> </i> Save Settings
+                        </button>
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"> </i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Color preset functionality
+    const colorInput = document.getElementById('school_color');
+    const colorPresets = document.querySelectorAll('.color-preset');
+    
+    colorPresets.forEach(preset => {
+        preset.addEventListener('click', function() {
+            const color = this.getAttribute('data-color');
+            colorInput.value = color;
+            
+            // Remove active class from all presets
+            colorPresets.forEach(p => p.classList.remove('active'));
+            // Add active class to clicked preset
+            this.classList.add('active');
+        });
+    });
+    
+    // Set initial active preset based on current color value
+    const currentColor = colorInput.value.toUpperCase();
+    colorPresets.forEach(preset => {
+        if (preset.getAttribute('data-color').toUpperCase() === currentColor) {
+            preset.classList.add('active');
+        }
+    });
+});
+</script>
+{% endblock %}
