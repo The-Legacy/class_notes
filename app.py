@@ -1,7 +1,9 @@
+
 import os
 import sys
 import flask
 import sqlite3 as sql
+import webbrowser
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from datetime import datetime
 
@@ -475,5 +477,10 @@ def unarchive_class(class_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Open the browser to localhost:5000
+    webbrowser.open('http://localhost:5000')
+    # Run Flask in non-debug mode so it blocks until the server stops
+    app.run(debug=False, host='0.0.0.0', port=5000)
+    # When the server stops, exit the program
+    sys.exit(0)
 
