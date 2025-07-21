@@ -63,6 +63,22 @@ def init_db():
         )
     ''')
     
+    # Create todos table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS todos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            completed INTEGER DEFAULT 0,
+            priority TEXT DEFAULT 'medium',
+            due_date TEXT,
+            class_id INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (class_id) REFERENCES classes (id)
+        )
+    ''')
+    
     # Insert default settings if they don't exist
     cursor.execute('''
         INSERT OR IGNORE INTO settings (key, value) VALUES ('school_name', 'U of M')
@@ -476,6 +492,137 @@ def unarchive_class(class_id):
     
     flash(f'Class "{cls["name"]}" has been restored to active classes.', 'success')
     return redirect(url_for('archived_classes'))
+
+@app.route('/todos')
+def todos():
+    """View all todos"""
+    conn = get_db_connection()
+    # Get todos with optional class information
+    todos = conn.execute(
+        '''SELECT t.*, c.name as class_name, c.color as class_color
+           FROM todos t
+           LEFT JOIN classes c ON t.class_id = c.id
+           ORDER BY 
+           CASE 
+               WHEN t.completed = 0 AND t.priority = 'high' THEN 1
+               WHEN t.completed = 0 AND t.priority = 'medium' THEN 2
+               WHEN t.completed = 0 AND t.priority = 'low' THEN 3
+               ELSE 4
+           END,
+           t.due_date ASC,
+           t.created_at DESC'''
+    ).fetchall()
+    
+    # Get all classes for the add todo form
+    classes = conn.execute('SELECT * FROM classes WHERE archived = 0 ORDER BY name').fetchall()
+    conn.close()
+    
+    return render_template('todos.html', todos=todos, classes=classes)
+
+@app.route('/todos/add', methods=['POST'])
+def add_todo():
+    """Add a new todo"""
+    title = request.form.get('title')
+    description = request.form.get('description', '')
+    priority = request.form.get('priority', 'medium')
+    due_date = request.form.get('due_date', '')
+    class_id = request.form.get('class_id')
+    
+    if not title:
+        flash('Todo title is required!', 'error')
+        return redirect(url_for('todos'))
+    
+    # Convert empty class_id to None for database
+    if class_id == '':
+        class_id = None
+    
+    conn = get_db_connection()
+    conn.execute(
+        '''INSERT INTO todos (title, description, priority, due_date, class_id)
+           VALUES (?, ?, ?, ?, ?)''',
+        (title, description, priority, due_date or None, class_id)
+    )
+    conn.commit()
+    conn.close()
+    
+    flash(f'Todo "{title}" has been added!', 'success')
+    return redirect(url_for('todos'))
+
+@app.route('/todos/<int:todo_id>/toggle', methods=['POST'])
+def toggle_todo(todo_id):
+    """Toggle todo completion status"""
+    conn = get_db_connection()
+    todo = conn.execute('SELECT * FROM todos WHERE id = ?', (todo_id,)).fetchone()
+    
+    if not todo:
+        flash('Todo not found!', 'error')
+        return redirect(url_for('todos'))
+    
+    new_status = 1 if todo['completed'] == 0 else 0
+    conn.execute(
+        '''UPDATE todos SET completed = ?, updated_at = CURRENT_TIMESTAMP 
+           WHERE id = ?''',
+        (new_status, todo_id)
+    )
+    conn.commit()
+    conn.close()
+    
+    status_text = 'completed' if new_status else 'reopened'
+    flash(f'Todo "{todo["title"]}" has been {status_text}!', 'success')
+    return redirect(url_for('todos'))
+
+@app.route('/todos/<int:todo_id>/delete', methods=['POST'])
+def delete_todo(todo_id):
+    """Delete a todo"""
+    conn = get_db_connection()
+    todo = conn.execute('SELECT * FROM todos WHERE id = ?', (todo_id,)).fetchone()
+    
+    if not todo:
+        flash('Todo not found!', 'error')
+        return redirect(url_for('todos'))
+    
+    conn.execute('DELETE FROM todos WHERE id = ?', (todo_id,))
+    conn.commit()
+    conn.close()
+    
+    flash(f'Todo "{todo["title"]}" has been deleted!', 'success')
+    return redirect(url_for('todos'))
+
+@app.route('/todos/<int:todo_id>/edit', methods=['POST'])
+def edit_todo(todo_id):
+    """Edit a todo"""
+    conn = get_db_connection()
+    todo = conn.execute('SELECT * FROM todos WHERE id = ?', (todo_id,)).fetchone()
+    
+    if not todo:
+        flash('Todo not found!', 'error')
+        return redirect(url_for('todos'))
+    
+    title = request.form.get('title')
+    description = request.form.get('description', '')
+    priority = request.form.get('priority', 'medium')
+    due_date = request.form.get('due_date', '')
+    class_id = request.form.get('class_id')
+    
+    if not title:
+        flash('Todo title is required!', 'error')
+        return redirect(url_for('todos'))
+    
+    # Convert empty class_id to None for database
+    if class_id == '':
+        class_id = None
+    
+    conn.execute(
+        '''UPDATE todos SET title = ?, description = ?, priority = ?, 
+           due_date = ?, class_id = ?, updated_at = CURRENT_TIMESTAMP
+           WHERE id = ?''',
+        (title, description, priority, due_date or None, class_id, todo_id)
+    )
+    conn.commit()
+    conn.close()
+    
+    flash(f'Todo "{title}" has been updated!', 'success')
+    return redirect(url_for('todos'))
 
 if __name__ == '__main__':
     init_db()

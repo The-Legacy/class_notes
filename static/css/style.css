@@ -528,3 +528,53 @@ footer {
 .alert-info {
     border-left: 4px solid #0dcaf0;
 }
+
+/* Todo card styling */
+.todo-card {
+    transition: all 0.2s ease;
+}
+
+.todo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.todo-card.completed {
+    opacity: 0.7;
+}
+
+.todo-card .card-title {
+    margin-bottom: 0.5rem;
+}
+
+.todo-card .badge {
+    font-size: 0.75rem;
+}
+
+/* Priority badges */
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge.bg-success {
+    background-color: #198754 !important;
+}
+
+/* Modal styling */
+.modal-content {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+}
+
+.modal-header {
+    border-bottom-color: var(--border-main);
+}
+
+.modal-footer {
+    border-top-color: var(--border-main);
+}
